@@ -29,4 +29,21 @@ class WorkItemRepositoryTest {
                 .isEqualTo("再現用の作業項目");
         assertThat(repository.count()).isEqualTo(1);
     }
+
+    @Test
+    void save_updates_an_aggregate_reloaded_after_its_initial_insert() {
+        WorkItem created = WorkItem.create("初期タイトル");
+        repository.save(created);
+
+        WorkItem reloaded = repository.findById(created.id()).orElseThrow();
+        assertThatCode(() -> repository.save(reloaded.rename("更新後タイトル")))
+                .doesNotThrowAnyException();
+
+        assertThat(repository.findById(created.id()))
+                .isPresent()
+                .get()
+                .extracting(WorkItem::title)
+                .isEqualTo("更新後タイトル");
+        assertThat(repository.count()).isEqualTo(1);
+    }
 }
