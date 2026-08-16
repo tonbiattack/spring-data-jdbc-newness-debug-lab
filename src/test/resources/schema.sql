@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS "work_item";
+
+CREATE TABLE "work_item" (
+    "ID" UUID PRIMARY KEY,
+    "TITLE" VARCHAR(255) NOT NULL
+);
